@@ -1,6 +1,6 @@
 class Producto {
   final int id;
-  final string nombre;
+  final String nombre;
   final double precio;
 
   Producto({
@@ -8,20 +8,20 @@ class Producto {
       required this.nombre,
       required this.precio
   });
-  factory Producto.fromMap(Map<String, dynamic> map>){
+  factory Producto.fromMap(Map<String, dynamic> map){
 
     return Producto(
-       id: map['id'] as int,
-       nombre: map['nombre'] as String,
-       precio: double.parse(map['precio'],toString()),
+      id: int.parse(map['id'].toString()),
+      nombre: map['nombre'].toString(),
+      precio: double.parse(map['precio'].toString()),
     );
   }
 
-  Map<String, dynamic> toMap(){
-     return {
-      'id':id,
-      'nombre':nombre,
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nombre': nombre,
       'precio': precio,
-     };
+    };
   }
 }

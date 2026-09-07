@@ -7,7 +7,7 @@ class Database {
       port: 3306,
       userName: 'root',
       password: '', // Changed to empty string commonly used for root locally, or keep as 'root' if user prefer
-      databaseName: 'apidart',
+      databaseName: 'prueba_cliente',
     );
     await connection.connect();
     return connection;

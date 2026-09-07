@@ -2,33 +2,41 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
-import 'package:miprimeraapi/database/database.dart';
-import 'package:miprimeraapi/routes/routes_producto.dart';
+import 'package:shelf_static/shelf_static.dart';
+import 'package:untitled1/database/database.dart';
+import 'package:untitled1/routes/routes_cliente.dart';
+import 'package:untitled1/routes/routes_detalle_venta.dart';
+import 'package:untitled1/routes/routes_producto.dart';
+import 'package:untitled1/routes/routes_venta.dart';
 
-void main(List<String> args) async {
-  // Conectar a la base de datos
+Future<void> main(List<String> args) async {
   final connection = await Database.connect();
-  print('Conectado a la base de datos MySQL');
+  print('Conectado a MySQL.');
 
-  // Configurar rutas
   final router = Router();
 
-  // Montar las rutas de productos
-  router.mount('/', productoRoutes(connection).call);
+  router.get('/', (Request request) => Response.ok('API funcionando\n'));
 
-  router.get('/', (Request request) {
-    return Response.ok('API de Productos en Dart activa');
-  });
+  final productoRouter = clienteRoutes(connection);
+  router.mount('/', productoRouter.call);
+  final ventaRouter = ventaRoutes(connection);
+  router.mount('/', ventaRouter.call);
+  final productosRouter = productoRoutes(connection);
+  router.mount('/', productosRouter.call);
+  final detallesRouter = detalleVentaRoutes(connection);
+  router.mount('/', detallesRouter.call);
 
-  // Configurar el pipeline
+  final staticHandler = createStaticHandler(
+    'public',
+    defaultDocument: 'docs.html',
+  );
+  router.mount('/docs', staticHandler.call);
+
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addHandler(router.call);
 
-  // Iniciar el servidor
-  final ip = InternetAddress.anyIPv4;
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final server = await serve(handler, ip, port);
-
-  print('Servidor escuchando en http://${server.address.host}:${server.port}');
+  await serve(handler, InternetAddress.anyIPv4, 8080);
+  print('Servidor en http://localhost:8080');
+  print('Documentación en http://localhost:8080/docs');
 }

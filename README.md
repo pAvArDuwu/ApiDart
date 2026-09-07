@@ -3,6 +3,28 @@ configured to enable running with [Docker](https://www.docker.com/).
 
 This sample code handles HTTP GET requests to `/` and `/echo/<message>`
 
+## Proceso de ventas
+
+La migración `002_create_ventas.sql` normaliza el proceso en tres tablas:
+
+- `productos` mantiene el catálogo y el stock disponible.
+- `ventas` almacena la cabecera y relaciona cada operación con un `cliente`.
+- `detalle_venta` relaciona productos con ventas y conserva la cantidad, el precio unitario y el subtotal aplicados en ese momento.
+
+Para registrar una venta se usa `POST /api/ventas` con este cuerpo:
+
+```json
+{
+	"cliente_id": 1,
+	"detalles": [
+		{"producto_id": 1, "cantidad": 2},
+		{"producto_id": 3, "cantidad": 1}
+	]
+}
+```
+
+El servicio ejecuta toda la operación dentro de una transacción: valida el cliente, bloquea los productos, verifica stock, inserta la venta y sus detalles, descuenta existencias y confirma el total. Si un paso falla, se revierte la operación completa.
+
 # Running the sample
 
 ## Running with the Dart SDK

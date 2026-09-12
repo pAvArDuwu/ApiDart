@@ -1,43 +1,44 @@
+// Modelo alineado exactamente con la tabla SQL productos
+// Campos: id, categoria_id, unidad_medida_id, nombre, precio, created_at, updated_at
 class Producto {
   final int id;
-  final String codigo;
+  final int categoriaId;
+  final int unidadMedidaId;
   final String nombre;
-  final String? descripcion;
   final double precio;
-  final int stock;
-  final bool activo;
+  final String? createdAt;
+  final String? updatedAt;
 
   const Producto({
     required this.id,
-    required this.codigo,
+    required this.categoriaId,
+    required this.unidadMedidaId,
     required this.nombre,
-    this.descripcion,
     required this.precio,
-    required this.stock,
-    required this.activo,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Producto.fromMap(Map<String, dynamic> map) {
     return Producto(
       id: int.parse(map['id'].toString()),
-      codigo: map['codigo'].toString(),
-      nombre: map['nombre'].toString(),
-      descripcion: map['descripcion']?.toString(),
+      categoriaId: int.parse(map['categoria_id'].toString()),
+      unidadMedidaId: int.parse(map['unidad_medida_id'].toString()),
+      nombre: map['nombre']?.toString() ?? '',
       precio: double.parse(map['precio'].toString()),
-      stock: int.parse(map['stock'].toString()),
-      activo:
-          map['activo'].toString() == '1' ||
-          map['activo'].toString().toLowerCase() == 'true',
+      createdAt: map['created_at']?.toString(),
+      updatedAt: map['updated_at']?.toString(),
     );
   }
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'codigo': codigo,
-    'nombre': nombre,
-    'descripcion': descripcion,
-    'precio': precio,
-    'stock': stock,
-    'activo': activo,
-  };
+        'id': id,
+        'categoria_id': categoriaId,
+        'unidad_medida_id': unidadMedidaId,
+        'nombre': nombre,
+        'precio': precio,
+        'created_at': createdAt,
+        'updated_at': updatedAt,
+      };
 }
+

@@ -1,16 +1,16 @@
-class DetalleVenta {
+class DetalleCompra {
   final int id;
-  final int ventaId;
+  final int compraId;
   final int productoId;
-  final int cantidad;
+  final double cantidad;
   final double precioUnitario;
   final double subtotal;
   final String? createdAt;
   final String? updatedAt;
 
-  const DetalleVenta({
+  const DetalleCompra({
     required this.id,
-    required this.ventaId,
+    required this.compraId,
     required this.productoId,
     required this.cantidad,
     required this.precioUnitario,
@@ -19,12 +19,12 @@ class DetalleVenta {
     this.updatedAt,
   });
 
-  factory DetalleVenta.fromMap(Map<String, dynamic> map) {
-    return DetalleVenta(
+  factory DetalleCompra.fromMap(Map<String, dynamic> map) {
+    return DetalleCompra(
       id: int.parse(map['id'].toString()),
-      ventaId: int.parse(map['venta_id'].toString()),
+      compraId: int.parse(map['compra_id'].toString()),
       productoId: int.parse(map['producto_id'].toString()),
-      cantidad: int.parse(map['cantidad'].toString()),
+      cantidad: double.parse(map['cantidad'].toString()),
       precioUnitario: double.parse(map['precio_unitario'].toString()),
       subtotal: double.parse(map['subtotal'].toString()),
       createdAt: map['created_at']?.toString(),
@@ -34,7 +34,7 @@ class DetalleVenta {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'venta_id': ventaId,
+        'compra_id': compraId,
         'producto_id': productoId,
         'cantidad': cantidad,
         'precio_unitario': precioUnitario,

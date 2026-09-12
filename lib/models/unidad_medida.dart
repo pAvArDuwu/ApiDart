@@ -1,29 +1,26 @@
-class Cliente {
+class UnidadMedida {
   final int id;
   final String nombre;
-  final String? apellido;
-  final String? telefono;
-  final String? email;
+  final String? abreviatura;
+  final bool activo;
   final String? createdAt;
   final String? updatedAt;
 
-  const Cliente({
+  const UnidadMedida({
     required this.id,
     required this.nombre,
-    this.apellido,
-    this.telefono,
-    this.email,
+    this.abreviatura,
+    required this.activo,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory Cliente.fromMap(Map<String, dynamic> map) {
-    return Cliente(
+  factory UnidadMedida.fromMap(Map<String, dynamic> map) {
+    return UnidadMedida(
       id: int.parse(map['id'].toString()),
       nombre: map['nombre']?.toString() ?? '',
-      apellido: map['apellido']?.toString(),
-      telefono: map['telefono']?.toString(),
-      email: map['email']?.toString(),
+      abreviatura: map['abreviatura']?.toString(),
+      activo: map['activo'].toString() == '1',
       createdAt: map['created_at']?.toString(),
       updatedAt: map['updated_at']?.toString(),
     );
@@ -32,9 +29,8 @@ class Cliente {
   Map<String, dynamic> toMap() => {
         'id': id,
         'nombre': nombre,
-        'apellido': apellido,
-        'telefono': telefono,
-        'email': email,
+        'abreviatura': abreviatura,
+        'activo': activo,
         'created_at': createdAt,
         'updated_at': updatedAt,
       };

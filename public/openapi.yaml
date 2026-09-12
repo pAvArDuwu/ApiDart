@@ -94,6 +94,34 @@ paths:
                 $ref: '#/components/schemas/Producto'
         '404':
           description: Producto no encontrado
+    put:
+      summary: Actualiza un producto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoProducto'
+      responses:
+        '200':
+          description: Producto actualizado
+    delete:
+      summary: Desactiva un producto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Producto desactivado
   /api/ventas/{ventaId}/detalles:
     get:
       summary: Lista el detalle de una venta

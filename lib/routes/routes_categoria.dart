@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
-import '../services/cliente_service.dart';
+import '../services/categoria_service.dart';
 
-Router clienteRoutes(MySQLConnection connection) {
+Router categoriaRoutes(MySQLConnection connection) {
   final router = Router();
-  final service = ClienteService(connection);
+  final service = CategoriaService(connection);
 
-  // GET /api/clientes
-  router.get('/api/clientes', (Request request) async {
+  // GET /api/categorias
+  router.get('/api/categorias', (Request request) async {
     final lista = await service.obtenerTodos();
     return Response.ok(
       jsonEncode(lista.map((c) => c.toMap()).toList()),
@@ -17,30 +17,29 @@ Router clienteRoutes(MySQLConnection connection) {
     );
   });
 
-  // GET /api/clientes/:id
-  router.get('/api/clientes/<id>', (Request request, String id) async {
-    final cliente = await service.obtenerPorId(int.parse(id));
-    if (cliente == null) {
+  // GET /api/categorias/:id
+  router.get('/api/categorias/<id>', (Request request, String id) async {
+    final categoria = await service.obtenerPorId(int.parse(id));
+    if (categoria == null) {
       return Response.notFound(
-        jsonEncode({'error': 'Cliente no encontrado'}),
+        jsonEncode({'error': 'Categoría no encontrada'}),
         headers: {'content-type': 'application/json'},
       );
     }
     return Response.ok(
-      jsonEncode(cliente.toMap()),
+      jsonEncode(categoria.toMap()),
       headers: {'content-type': 'application/json'},
     );
   });
 
-  // POST /api/clientes
-  router.post('/api/clientes', (Request request) async {
+  // POST /api/categorias
+  router.post('/api/categorias', (Request request) async {
     try {
       final body = jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final result = await service.crear(
         nombre: body['nombre'].toString(),
-        apellido: body['apellido']?.toString(),
-        telefono: body['telefono']?.toString(),
-        email: body['email']?.toString(),
+        descripcion: body['descripcion']?.toString(),
+        activo: body['activo'] != false,
       );
       return Response(
         201,
@@ -55,19 +54,18 @@ Router clienteRoutes(MySQLConnection connection) {
     }
   });
 
-  // PUT /api/clientes/:id
-  router.put('/api/clientes/<id>', (Request request, String id) async {
+  // PUT /api/categorias/:id
+  router.put('/api/categorias/<id>', (Request request, String id) async {
     try {
       final body = jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       await service.actualizar(
         id: int.parse(id),
         nombre: body['nombre'].toString(),
-        apellido: body['apellido']?.toString(),
-        telefono: body['telefono']?.toString(),
-        email: body['email']?.toString(),
+        descripcion: body['descripcion']?.toString(),
+        activo: body['activo'] != false,
       );
       return Response.ok(
-        jsonEncode({'mensaje': 'Cliente actualizado'}),
+        jsonEncode({'mensaje': 'Categoría actualizada'}),
         headers: {'content-type': 'application/json'},
       );
     } on FormatException {
@@ -78,11 +76,11 @@ Router clienteRoutes(MySQLConnection connection) {
     }
   });
 
-  // DELETE /api/clientes/:id
-  router.delete('/api/clientes/<id>', (Request request, String id) async {
+  // DELETE /api/categorias/:id
+  router.delete('/api/categorias/<id>', (Request request, String id) async {
     await service.eliminar(int.parse(id));
     return Response.ok(
-      jsonEncode({'mensaje': 'Cliente eliminado'}),
+      jsonEncode({'mensaje': 'Categoría eliminada'}),
       headers: {'content-type': 'application/json'},
     );
   });

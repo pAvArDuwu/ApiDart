@@ -1,5 +1,4 @@
 import 'package:mysql_client/mysql_client.dart';
-
 import '../models/producto.dart';
 
 class ProductoService {
@@ -9,7 +8,7 @@ class ProductoService {
 
   Future<List<Producto>> obtenerTodos() async {
     final result = await connection.execute(
-      'SELECT id, codigo, nombre, descripcion, precio, stock, activo '
+      'SELECT id, categoria_id, unidad_medida_id, nombre, precio, created_at, updated_at '
       'FROM productos ORDER BY id DESC',
     );
     return result.rows.map((row) => Producto.fromMap(row.assoc())).toList();
@@ -17,7 +16,7 @@ class ProductoService {
 
   Future<Producto?> obtenerPorId(int id) async {
     final result = await connection.execute(
-      'SELECT id, codigo, nombre, descripcion, precio, stock, activo '
+      'SELECT id, categoria_id, unidad_medida_id, nombre, precio, created_at, updated_at '
       'FROM productos WHERE id = :id',
       {'id': id},
     );
@@ -26,23 +25,48 @@ class ProductoService {
   }
 
   Future<IResultSet> crear({
-    required String codigo,
+    required int categoriaId,
+    required int unidadMedidaId,
     required String nombre,
-    String? descripcion,
     required double precio,
-    required int stock,
   }) {
     return connection.execute(
-      'INSERT INTO productos '
-      '(codigo, nombre, descripcion, precio, stock) '
-      'VALUES (:codigo, :nombre, :descripcion, :precio, :stock)',
+      'INSERT INTO productos (categoria_id, unidad_medida_id, nombre, precio) '
+      'VALUES (:categoriaId, :unidadMedidaId, :nombre, :precio)',
       {
-        'codigo': codigo,
+        'categoriaId': categoriaId,
+        'unidadMedidaId': unidadMedidaId,
         'nombre': nombre,
-        'descripcion': descripcion,
         'precio': precio,
-        'stock': stock,
       },
     );
   }
+
+  Future<IResultSet> actualizar({
+    required int id,
+    required int categoriaId,
+    required int unidadMedidaId,
+    required String nombre,
+    required double precio,
+  }) {
+    return connection.execute(
+      'UPDATE productos SET categoria_id = :categoriaId, unidad_medida_id = :unidadMedidaId, '
+      'nombre = :nombre, precio = :precio WHERE id = :id',
+      {
+        'id': id,
+        'categoriaId': categoriaId,
+        'unidadMedidaId': unidadMedidaId,
+        'nombre': nombre,
+        'precio': precio,
+      },
+    );
+  }
+
+  Future<IResultSet> eliminar(int id) {
+    return connection.execute(
+      'DELETE FROM productos WHERE id = :id',
+      {'id': id},
+    );
+  }
 }
+

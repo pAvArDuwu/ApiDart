@@ -1,29 +1,26 @@
-class Cliente {
+class Categoria {
   final int id;
   final String nombre;
-  final String? apellido;
-  final String? telefono;
-  final String? email;
+  final String? descripcion;
+  final bool activo;
   final String? createdAt;
   final String? updatedAt;
 
-  const Cliente({
+  const Categoria({
     required this.id,
     required this.nombre,
-    this.apellido,
-    this.telefono,
-    this.email,
+    this.descripcion,
+    required this.activo,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory Cliente.fromMap(Map<String, dynamic> map) {
-    return Cliente(
+  factory Categoria.fromMap(Map<String, dynamic> map) {
+    return Categoria(
       id: int.parse(map['id'].toString()),
       nombre: map['nombre']?.toString() ?? '',
-      apellido: map['apellido']?.toString(),
-      telefono: map['telefono']?.toString(),
-      email: map['email']?.toString(),
+      descripcion: map['descripcion']?.toString(),
+      activo: map['activo'].toString() == '1',
       createdAt: map['created_at']?.toString(),
       updatedAt: map['updated_at']?.toString(),
     );
@@ -32,9 +29,8 @@ class Cliente {
   Map<String, dynamic> toMap() => {
         'id': id,
         'nombre': nombre,
-        'apellido': apellido,
-        'telefono': telefono,
-        'email': email,
+        'descripcion': descripcion,
+        'activo': activo,
         'created_at': createdAt,
         'updated_at': updatedAt,
       };

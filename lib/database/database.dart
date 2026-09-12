@@ -6,8 +6,8 @@ class Database {
       host: '127.0.0.1',
       port: 3306,
       userName: 'root',
-      password: '', // Changed to empty string commonly used for root locally, or keep as 'root' if user prefer
-      databaseName: 'prueba_cliente',
+      password: '',
+      databaseName: 'api_dart',
     );
     await connection.connect();
     return connection;

@@ -61,7 +61,28 @@ Future<void> main(List<String> args) async {
     // El directorio public puede no existir en desarrollo
   }
 
-  final handler = Pipeline().addMiddleware(logRequests()).addHandler(router.call);
+  Middleware corsMiddleware() {
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Origin, Content-Type, Authorization, Accept',
+    };
+
+    return (Handler innerHandler) {
+      return (Request request) async {
+        if (request.method == 'OPTIONS') {
+          return Response.ok('', headers: corsHeaders);
+        }
+        final response = await innerHandler(request);
+        return response.change(headers: corsHeaders);
+      };
+    };
+  }
+
+  final handler = Pipeline()
+      .addMiddleware(logRequests())
+      .addMiddleware(corsMiddleware())
+      .addHandler(router.call);
 
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
   await serve(handler, InternetAddress.anyIPv4, port);
